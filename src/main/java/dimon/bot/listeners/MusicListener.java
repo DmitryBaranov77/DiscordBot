@@ -5,11 +5,12 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.*;
+import net.dv8tion.jda.api.audio.SpeakingMode;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -58,8 +59,9 @@ public class MusicListener extends ListenerAdapter implements EventListener {
         } else if("~leave".equals(command[0])){
             GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
             musicManager.scheduler.clearQueue();
-
             disconnectFromVoiceChannel(event.getChannel().getGuild().getAudioManager());
+        }else if("~join".equals(command[0])){
+            connectToFirstVoiceChannel(event.getChannel().getGuild().getAudioManager());
         }
 
         super.onGuildMessageReceived(event);
@@ -118,6 +120,7 @@ public class MusicListener extends ListenerAdapter implements EventListener {
         if (!audioManager.isConnected() && !audioManager.isAttemptingToConnect()) {
             for (VoiceChannel voiceChannel : audioManager.getGuild().getVoiceChannels()) {
                 audioManager.openAudioConnection(voiceChannel);
+                audioManager.setSpeakingMode(SpeakingMode.SOUNDSHARE);
                 break;
             }
         }
