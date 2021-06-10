@@ -6,6 +6,7 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.*;
+import dimon.bot.listeners.music.GuildMusicManager;
 import net.dv8tion.jda.api.audio.SpeakingMode;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -51,6 +52,8 @@ public class MusicListener extends ListenerAdapter implements EventListener {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         String[] command = event.getMessage().getContentRaw().split(" ", 2);
+        VoiceChannel voiceChannel = event.getMember().getVoiceState().getChannel();
+
 
         if ("~play".equals(command[0]) && command.length == 2) {
             loadAndPlay(event.getChannel(), command[1]);
@@ -105,7 +108,6 @@ public class MusicListener extends ListenerAdapter implements EventListener {
 
     private void play(Guild guild, GuildMusicManager musicManager, AudioTrack track) {
         connectToFirstVoiceChannel(guild.getAudioManager());
-
         musicManager.scheduler.queue(track);
     }
 
@@ -117,10 +119,12 @@ public class MusicListener extends ListenerAdapter implements EventListener {
     }
 
     private static void connectToFirstVoiceChannel(AudioManager audioManager) {
-        if (!audioManager.isConnected() && !audioManager.isAttemptingToConnect()) {
+        if (!audioManager.isConnected()) {
             for (VoiceChannel voiceChannel : audioManager.getGuild().getVoiceChannels()) {
                 audioManager.openAudioConnection(voiceChannel);
                 audioManager.setSpeakingMode(SpeakingMode.SOUNDSHARE);
+                audioManager.setSelfDeafened(true);
+
                 break;
             }
         }
@@ -130,5 +134,42 @@ public class MusicListener extends ListenerAdapter implements EventListener {
         if(audioManager.isConnected()){
             audioManager.closeAudioConnection();
         }
+    }
+
+    private static void hello(){
+
+    }
+
+    @Override
+    public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
+        TextChannel channel = event.getChannelJoined().getGuild().getDefaultChannel();
+        GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
+        String trackUrl = null;
+        if(!event.getMember().getUser().isBot()) {
+            trackUrl = "https://www.youtube.com/watch?v=mLuA19NolJQ";
+        }else{
+            trackUrl = "https://www.youtube.com/watch?v=u3um_tRS5xM";
+
+        }
+        playerManager.loadItemOrdered(getGuildAudioPlayer(channel.getGuild()), trackUrl, new AudioLoadResultHandler() {
+            @Override
+            public void trackLoaded(AudioTrack track) {
+                connectToFirstVoiceChannel(channel.getGuild().getAudioManager());
+                musicManager.scheduler.hello(track);
+            }
+
+            @Override
+            public void playlistLoaded(AudioPlaylist playlist) {
+
+            }
+
+            @Override
+            public void noMatches() {
+            }
+
+            @Override
+            public void loadFailed(FriendlyException exception) {
+            }
+        });
     }
 }

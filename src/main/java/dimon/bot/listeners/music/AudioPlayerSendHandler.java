@@ -1,4 +1,4 @@
-package dimon.bot.listeners;
+package dimon.bot.listeners.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame;
