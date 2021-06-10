@@ -55,6 +55,10 @@ public class MusicListener extends ListenerAdapter implements EventListener {
             loadAndPlay(event.getChannel(), command[1]);
         } else if ("~skip".equals(command[0])) {
             skipTrack(event.getChannel());
+        } else if("~leave".equals(command[0])){
+            GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
+            musicManager.scheduler.clearQueue();
+            disconnectFromVoiceChannel(event.getChannel().getGuild().getAudioManager());
         }
 
         super.onGuildMessageReceived(event);
@@ -115,6 +119,12 @@ public class MusicListener extends ListenerAdapter implements EventListener {
                 audioManager.openAudioConnection(voiceChannel);
                 break;
             }
+        }
+    }
+
+    private static void disconnectFromVoiceChannel(AudioManager audioManager){
+        if(audioManager.isConnected()){
+            audioManager.closeAudioConnection();
         }
     }
 }
