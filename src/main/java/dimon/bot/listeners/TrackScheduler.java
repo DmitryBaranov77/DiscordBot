@@ -28,6 +28,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void clearQueue(){
+        player.stopTrack();
         queue.clear();
     }
 

@@ -58,6 +58,7 @@ public class MusicListener extends ListenerAdapter implements EventListener {
         } else if("~leave".equals(command[0])){
             GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
             musicManager.scheduler.clearQueue();
+
             disconnectFromVoiceChannel(event.getChannel().getGuild().getAudioManager());
         }
 
