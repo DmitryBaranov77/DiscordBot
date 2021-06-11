@@ -52,4 +52,10 @@ public class TrackScheduler extends AudioEventAdapter {
             player.startTrack(queue.poll(), false);
         }
     }
+
+    public void  bye(AudioTrack track){
+        clearQueue();
+        queue.addFirst(track);
+        player.startTrack(queue.poll(), false);
+    }
 }

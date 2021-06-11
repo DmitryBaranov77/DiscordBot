@@ -59,8 +59,8 @@ public class MusicListener extends ListenerAdapter implements EventListener {
                 skipTrack(event.getChannel());
                 break;
             case "~leave":
+                playByeMusic(event.getChannel(), "https://webchatdimonanton.s3.eu-west-3.amazonaws.com/DiscordBot/kto-kuda-a-ya-po-delam.mp3");
                 disconnectFromVoiceChannel(event.getGuild().getAudioManager());
-                getGuildAudioPlayer(event.getGuild()).scheduler.clearQueue();
                 break;
             case "~join":
                 connectToFirstVoiceChannel(event.getChannel().getGuild().getAudioManager());
@@ -133,8 +133,10 @@ public class MusicListener extends ListenerAdapter implements EventListener {
         return audioManager.getGuild().getVoiceChannels().get(0);
     }
 
+    @SneakyThrows
     private static void disconnectFromVoiceChannel(AudioManager audioManager) {
         if (audioManager.isConnected()) {
+            Thread.sleep(6000);
             audioManager.closeAudioConnection();
         }
     }
@@ -161,6 +163,29 @@ public class MusicListener extends ListenerAdapter implements EventListener {
             public void trackLoaded(AudioTrack track) {
                 connectToFirstVoiceChannel(channel.getGuild().getAudioManager());
                 musicManager.scheduler.hello(track);
+            }
+
+            @Override
+            public void playlistLoaded(AudioPlaylist playlist) {
+
+            }
+
+            @Override
+            public void noMatches() {
+            }
+
+            @Override
+            public void loadFailed(FriendlyException exception) {
+            }
+        });
+    }
+
+    private void playByeMusic(TextChannel channel, String trackUrl) {
+        GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
+        playerManager.loadItemOrdered(getGuildAudioPlayer(channel.getGuild()), trackUrl, new AudioLoadResultHandler() {
+            @Override
+            public void trackLoaded(AudioTrack track) {
+                musicManager.scheduler.bye(track);
             }
 
             @Override
