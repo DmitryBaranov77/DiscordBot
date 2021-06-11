@@ -54,19 +54,20 @@ public class MusicListener extends ListenerAdapter implements EventListener {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         String[] command = event.getMessage().getContentRaw().split(" ", 2);
-        VoiceChannel voiceChannel = event.getMember().getVoiceState().getChannel();
+        switch (command[0]) {
+            case "~skip":
+                skipTrack(event.getChannel());
+                break;
+            case "~leave":
+                disconnectFromVoiceChannel(event.getGuild().getAudioManager());
+                getGuildAudioPlayer(event.getGuild()).scheduler.clearQueue();
+                break;
+            case "~join":
+                connectToFirstVoiceChannel(event.getChannel().getGuild().getAudioManager());
+                break;
+        }
         if ("~play".equals(command[0]) && command.length == 2) {
             loadAndPlay(event.getChannel(), command[1]);
-        } else if ("~skip".equals(command[0])) {
-            skipTrack(event.getChannel());
-        } else if("~leave".equals(command[0])){
-            GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
-            musicManager.scheduler.clearQueue();
-            playStaticMusic(event.getChannel(), "src/main/resources/static/kto-kuda-a-ya-po-delam.mp3");
-            Thread.sleep(4000);
-            disconnectFromVoiceChannel(event.getChannel().getGuild().getAudioManager());
-        }else if("~join".equals(command[0])){
-            connectToFirstVoiceChannel(event.getChannel().getGuild().getAudioManager());
         }
 
         super.onGuildMessageReceived(event);
@@ -122,42 +123,38 @@ public class MusicListener extends ListenerAdapter implements EventListener {
 
     private static void connectToFirstVoiceChannel(AudioManager audioManager) {
         if (!audioManager.isConnected()) {
-            for (VoiceChannel voiceChannel : audioManager.getGuild().getVoiceChannels()) {
-                audioManager.openAudioConnection(voiceChannel);
-                audioManager.setSpeakingMode(SpeakingMode.SOUNDSHARE);
-                audioManager.setSelfDeafened(true);
-
-                break;
-            }
+            audioManager.openAudioConnection(getFirstVoiceChannel(audioManager));
+            audioManager.setSpeakingMode(SpeakingMode.SOUNDSHARE);
+            audioManager.setSelfDeafened(true);
         }
     }
 
-    private static void disconnectFromVoiceChannel(AudioManager audioManager){
-        if(audioManager.isConnected()){
+    private static VoiceChannel getFirstVoiceChannel(AudioManager audioManager) {
+        return audioManager.getGuild().getVoiceChannels().get(0);
+    }
+
+    private static void disconnectFromVoiceChannel(AudioManager audioManager) {
+        if (audioManager.isConnected()) {
             audioManager.closeAudioConnection();
         }
-    }
-
-    private static void hello(){
-
     }
 
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
         TextChannel channel = event.getChannelJoined().getGuild().getDefaultChannel();
-
-        String trackUrl = null;
-        if(!event.getMember().getUser().isBot()) {
-            playStaticMusic(channel, "src/main/resources/static/o-privet.mp3");
-        }else{
-            playStaticMusic(channel, "src/main/resources/static/shizofreniya.mp3");
-            playStaticMusic(channel, "src/main/resources/static/-blin-zachem-ya-syuda-prishel.mp3");
-            playStaticMusic(channel, "src/main/resources/static/povezlo-povezlo.mp3");
+        if(event.getMember().getVoiceState().getChannel() == getFirstVoiceChannel(event.getGuild().getAudioManager())){
+            if (!event.getMember().getUser().isBot()) {
+                playHelloMusic(channel, "https://webchatdimonanton.s3.eu-west-3.amazonaws.com/DiscordBot/o-privet.mp3");
+            } else {
+                playHelloMusic(channel, "https://webchatdimonanton.s3.eu-west-3.amazonaws.com/DiscordBot/shizofreniya.mp3");
+                playHelloMusic(channel, "https://webchatdimonanton.s3.eu-west-3.amazonaws.com/DiscordBot/-blin-zachem-ya-syuda-prishel.mp3");
+                playHelloMusic(channel, "https://webchatdimonanton.s3.eu-west-3.amazonaws.com/DiscordBot/povezlo-povezlo.mp3");
+            }
         }
 
     }
 
-    private void playStaticMusic(TextChannel channel, String trackUrl){
+    private void playHelloMusic(TextChannel channel, String trackUrl) {
         GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
         playerManager.loadItemOrdered(getGuildAudioPlayer(channel.getGuild()), trackUrl, new AudioLoadResultHandler() {
             @Override

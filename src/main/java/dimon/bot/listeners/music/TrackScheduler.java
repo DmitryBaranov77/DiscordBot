@@ -4,7 +4,6 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
-import lombok.SneakyThrows;
 
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -39,7 +38,6 @@ public class TrackScheduler extends AudioEventAdapter {
         }
     }
 
-    @SneakyThrows
     public void hello(AudioTrack track){
         try{
             AudioTrack currentTrack = player.getPlayingTrack().makeClone();
@@ -54,5 +52,4 @@ public class TrackScheduler extends AudioEventAdapter {
             player.startTrack(queue.poll(), false);
         }
     }
-
 }
