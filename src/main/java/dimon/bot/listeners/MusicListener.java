@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.*;
 import dimon.bot.listeners.music.GuildMusicManager;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.audio.SpeakingMode;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -49,12 +50,11 @@ public class MusicListener extends ListenerAdapter implements EventListener {
         return musicManager;
     }
 
+    @SneakyThrows
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         String[] command = event.getMessage().getContentRaw().split(" ", 2);
         VoiceChannel voiceChannel = event.getMember().getVoiceState().getChannel();
-
-
         if ("~play".equals(command[0]) && command.length == 2) {
             loadAndPlay(event.getChannel(), command[1]);
         } else if ("~skip".equals(command[0])) {
@@ -62,6 +62,8 @@ public class MusicListener extends ListenerAdapter implements EventListener {
         } else if("~leave".equals(command[0])){
             GuildMusicManager musicManager = getGuildAudioPlayer(event.getChannel().getGuild());
             musicManager.scheduler.clearQueue();
+            playStaticMusic(event.getChannel(), "src/main/resources/static/kto-kuda-a-ya-po-delam.mp3");
+            Thread.sleep(4000);
             disconnectFromVoiceChannel(event.getChannel().getGuild().getAudioManager());
         }else if("~join".equals(command[0])){
             connectToFirstVoiceChannel(event.getChannel().getGuild().getAudioManager());
@@ -143,14 +145,20 @@ public class MusicListener extends ListenerAdapter implements EventListener {
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
         TextChannel channel = event.getChannelJoined().getGuild().getDefaultChannel();
-        GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
+
         String trackUrl = null;
         if(!event.getMember().getUser().isBot()) {
-            trackUrl = "https://www.youtube.com/watch?v=mLuA19NolJQ";
+            playStaticMusic(channel, "src/main/resources/static/o-privet.mp3");
         }else{
-            trackUrl = "https://www.youtube.com/watch?v=u3um_tRS5xM";
-
+            playStaticMusic(channel, "src/main/resources/static/shizofreniya.mp3");
+            playStaticMusic(channel, "src/main/resources/static/-blin-zachem-ya-syuda-prishel.mp3");
+            playStaticMusic(channel, "src/main/resources/static/povezlo-povezlo.mp3");
         }
+
+    }
+
+    private void playStaticMusic(TextChannel channel, String trackUrl){
+        GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
         playerManager.loadItemOrdered(getGuildAudioPlayer(channel.getGuild()), trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
