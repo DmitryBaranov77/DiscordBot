@@ -13,10 +13,12 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -153,7 +155,14 @@ public class MusicListener extends ListenerAdapter implements EventListener {
                 playHelloMusic(channel, "https://webchatdimonanton.s3.eu-west-3.amazonaws.com/DiscordBot/povezlo-povezlo.mp3");
             }
         }
+    }
 
+    @Override
+    public void onGuildVoiceLeave(GuildVoiceLeaveEvent event) {
+        VoiceChannel channelLeft = event.getChannelLeft();
+        if(channelLeft == getFirstVoiceChannel(event.getGuild().getAudioManager()) && channelLeft.getMembers().size() == 0){
+            disconnectFromVoiceChannel(event.getGuild().getAudioManager());
+        }
     }
 
     private void playHelloMusic(TextChannel channel, String trackUrl) {
