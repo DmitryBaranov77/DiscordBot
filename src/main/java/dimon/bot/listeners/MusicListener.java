@@ -18,7 +18,6 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -160,8 +159,9 @@ public class MusicListener extends ListenerAdapter implements EventListener {
     @Override
     public void onGuildVoiceLeave(GuildVoiceLeaveEvent event) {
         VoiceChannel channelLeft = event.getChannelLeft();
-        if(channelLeft == getFirstVoiceChannel(event.getGuild().getAudioManager()) && channelLeft.getMembers().size() == 0){
-            disconnectFromVoiceChannel(event.getGuild().getAudioManager());
+        if(channelLeft == getFirstVoiceChannel(event.getGuild().getAudioManager()) && channelLeft.getMembers().size() == 1){
+            getGuildAudioPlayer(event.getGuild()).scheduler.clearQueue();
+            event.getGuild().getAudioManager().closeAudioConnection();
         }
     }
 
