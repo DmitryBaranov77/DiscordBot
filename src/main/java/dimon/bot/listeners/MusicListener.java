@@ -20,11 +20,18 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.springframework.stereotype.Service;
 
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class MusicListener extends ListenerAdapter implements EventListener {
+public class MusicListener extends ListenerAdapter implements EventListener{
 
     private final AudioPlayerManager playerManager;
     private final Map<Long, GuildMusicManager> musicManagers;
@@ -167,6 +174,7 @@ public class MusicListener extends ListenerAdapter implements EventListener {
 
     private void playHelloMusic(TextChannel channel, String trackUrl) {
         GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
+
         playerManager.loadItemOrdered(getGuildAudioPlayer(channel.getGuild()), trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
