@@ -67,7 +67,7 @@ public class MusicListener extends ListenerAdapter implements EventListener{
                 skipTrack(event.getChannel());
                 break;
             case "~leave":
-                playByeMusic(event.getChannel(), "https://webchatdimonanton.s3.eu-west-3.amazonaws.com/DiscordBot/kto-kuda-a-ya-po-delam.mp3");
+                playByeMusic(event.getChannel(), "src/main/resources/sounds/kto-kuda-a-ya-po-delam.mp3");
                 disconnectFromVoiceChannel(event.getGuild().getAudioManager());
                 break;
             case "~join":
@@ -154,11 +154,11 @@ public class MusicListener extends ListenerAdapter implements EventListener{
         TextChannel channel = event.getChannelJoined().getGuild().getDefaultChannel();
         if(event.getMember().getVoiceState().getChannel() == getFirstVoiceChannel(event.getGuild().getAudioManager())){
             if (!event.getMember().getUser().isBot()) {
-                playHelloMusic(channel, "https://webchatdimonanton.s3.eu-west-3.amazonaws.com/DiscordBot/%D0%9E+%D0%9F%D1%80%D0%B8%D0%B2%D0%B5%D1%82+%D0%BC%D0%B5%D0%BC.mp3");
+                playHelloMusic(channel, "src/main/resources/sounds/О Привет мем.mp3");
             } else {
-                playHelloMusic(channel, "https://webchatdimonanton.s3.eu-west-3.amazonaws.com/DiscordBot/shizofreniya.mp3");
-                playHelloMusic(channel, "https://webchatdimonanton.s3.eu-west-3.amazonaws.com/DiscordBot/-blin-zachem-ya-syuda-prishel.mp3");
-                playHelloMusic(channel, "https://webchatdimonanton.s3.eu-west-3.amazonaws.com/DiscordBot/povezlo-povezlo.mp3");
+                playHelloMusic(channel, "src/main/resources/sounds/shizofreniya.mp3");
+                playHelloMusic(channel, "src/main/resources/sounds/-blin-zachem-ya-syuda-prishel.mp3");
+                playHelloMusic(channel, "src/main/resources/sounds/povezlo-povezlo.mp3");
             }
         }
     }
