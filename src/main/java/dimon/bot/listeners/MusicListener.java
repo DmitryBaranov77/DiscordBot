@@ -157,7 +157,7 @@ public class MusicListener extends ListenerAdapter implements EventListener{
         if(event.getMember().getVoiceState().getChannel() == getFirstVoiceChannel(event.getGuild().getAudioManager())){
             if (!event.getMember().getUser().isBot()) {
                 System.out.println("а блять");
-                playHelloMusic(channel, "src/main/resources/sounds/О Привет мем.mp3");
+                playHelloMusic(channel, "src/main/resources/sounds/oprivet.mp3");
             } else {
                 playHelloMusic(channel, "src/main/resources/sounds/shizofreniya.mp3");
                 playHelloMusic(channel, "src/main/resources/sounds/-blin-zachem-ya-syuda-prishel.mp3");
@@ -178,7 +178,6 @@ public class MusicListener extends ListenerAdapter implements EventListener{
     private void playHelloMusic(TextChannel channel, String trackUrl) {
         GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
         connectToFirstVoiceChannel(channel.getGuild().getAudioManager());
-
         playerManager.loadItemOrdered(getGuildAudioPlayer(channel.getGuild()), trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
