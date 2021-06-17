@@ -152,8 +152,11 @@ public class MusicListener extends ListenerAdapter implements EventListener{
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
         TextChannel channel = event.getChannelJoined().getGuild().getDefaultChannel();
+        System.out.println(event.getMember().getVoiceState().getChannel() == getFirstVoiceChannel(event.getGuild().getAudioManager()));
+        System.out.println(!event.getMember().getUser().isBot());
         if(event.getMember().getVoiceState().getChannel() == getFirstVoiceChannel(event.getGuild().getAudioManager())){
             if (!event.getMember().getUser().isBot()) {
+                System.out.println("а блять");
                 playHelloMusic(channel, "src/main/resources/sounds/О Привет мем.mp3");
             } else {
                 playHelloMusic(channel, "src/main/resources/sounds/shizofreniya.mp3");
