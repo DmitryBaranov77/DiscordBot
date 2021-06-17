@@ -174,11 +174,11 @@ public class MusicListener extends ListenerAdapter implements EventListener{
 
     private void playHelloMusic(TextChannel channel, String trackUrl) {
         GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
+        connectToFirstVoiceChannel(channel.getGuild().getAudioManager());
 
         playerManager.loadItemOrdered(getGuildAudioPlayer(channel.getGuild()), trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                connectToFirstVoiceChannel(channel.getGuild().getAudioManager());
                 musicManager.scheduler.hello(track);
             }
 
