@@ -20,13 +20,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.springframework.stereotype.Service;
 
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,7 +60,7 @@ public class MusicListener extends ListenerAdapter implements EventListener{
                 skipTrack(event.getChannel());
                 break;
             case "~leave":
-                playByeMusic(event.getChannel(), "src/main/resources/sounds/kto-kuda-a-ya-po-delam.mp3");
+                playByeMusic(event.getChannel(),"http://192.168.1.74:9000/discord/kto-kuda-a-ya-po-delam.mp3");
                 disconnectFromVoiceChannel(event.getGuild().getAudioManager());
                 break;
             case "~join":
@@ -154,11 +147,11 @@ public class MusicListener extends ListenerAdapter implements EventListener{
         TextChannel channel = event.getChannelJoined().getGuild().getDefaultChannel();
         if(event.getMember().getVoiceState().getChannel() == getFirstVoiceChannel(event.getGuild().getAudioManager())){
             if (!event.getMember().getUser().isBot()) {
-                playHelloMusic(channel, "src/main/resources/sounds/oprivet.mp3");
+                playHelloMusic(channel, "http://192.168.1.74:9000/discord/oprivet.mp3");
             } else {
-                playHelloMusic(channel, "src/main/resources/sounds/shizofreniya.mp3");
-                playHelloMusic(channel, "src/main/resources/sounds/-blin-zachem-ya-syuda-prishel.mp3");
-                playHelloMusic(channel, "src/main/resources/sounds/povezlo-povezlo.mp3");
+                playHelloMusic(channel, "http://192.168.1.74:9000/discord/shizofreniya.mp3");
+                playHelloMusic(channel, "http://192.168.1.74:9000/discord/-blin-zachem-ya-syuda-prishel.mp3");
+                playHelloMusic(channel, "http://192.168.1.74:9000/discord/povezlo-povezlo.mp3");
             }
         }
     }
