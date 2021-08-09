@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class MusicListener extends ListenerAdapter implements EventListener{
+public class MusicListener extends ListenerAdapter implements EventListener {
 
     private final AudioPlayerManager playerManager;
     private final Map<Long, GuildMusicManager> musicManagers;
@@ -60,21 +60,28 @@ public class MusicListener extends ListenerAdapter implements EventListener{
                 skipTrack(event.getChannel());
                 break;
             case "~leave":
-                playByeMusic(event.getChannel(),"http://192.168.1.74:9000/discord/kto-kuda-a-ya-po-delam.mp3");
+                playByeMusic(event.getChannel(), "http://192.168.1.74:9000/discord/kto-kuda-a-ya-po-delam.mp3");
                 disconnectFromVoiceChannel(event.getGuild().getAudioManager());
                 break;
             case "~join":
-                connectToFirstVoiceChannel(event.getChannel().getGuild().getAudioManager());
+                connectToVoiceChannel(event.getMember().getVoiceState().getChannel(), event.getChannel().getGuild().getAudioManager());
+                break;
+            case "~notify":
+                if(event.getAuthor().getId().equals("407644589277708298") || event.getAuthor().getId().equals("286154555417296906") || event.getAuthor().getId().equals("587897463252189195")){
+                    event.getChannel().sendMessage("Raccoona_gg Запустила трансляцию! Залетай скорее! https://www.twitch.tv/raccoona_gg").queue();
+                } else{
+                    event.getChannel().sendMessage("Отказано в доступе. ХЫ").queue();
+                }
                 break;
         }
         if ("~play".equals(command[0]) && command.length == 2) {
-            loadAndPlay(event.getChannel(), command[1]);
+            loadAndPlay(event.getMember().getVoiceState().getChannel(), event.getChannel(), command[1]);
         }
 
         super.onGuildMessageReceived(event);
     }
 
-    private void loadAndPlay(final TextChannel channel, final String trackUrl) {
+    private void loadAndPlay(VoiceChannel voiceChannel ,final TextChannel channel, final String trackUrl) {
         GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
 
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
@@ -82,7 +89,7 @@ public class MusicListener extends ListenerAdapter implements EventListener{
             public void trackLoaded(AudioTrack track) {
                 channel.sendMessage("Adding to queue " + track.getInfo().title).queue();
 
-                play(channel.getGuild(), musicManager, track);
+                play(voiceChannel, channel.getGuild(), musicManager, track);
             }
 
             @Override
@@ -95,7 +102,7 @@ public class MusicListener extends ListenerAdapter implements EventListener{
 
                 channel.sendMessage("Adding to queue " + firstTrack.getInfo().title + " (first track of playlist " + playlist.getName() + ")").queue();
 
-                play(channel.getGuild(), musicManager, firstTrack);
+                play(voiceChannel, channel.getGuild(), musicManager, firstTrack);
             }
 
             @Override
@@ -110,8 +117,8 @@ public class MusicListener extends ListenerAdapter implements EventListener{
         });
     }
 
-    private void play(Guild guild, GuildMusicManager musicManager, AudioTrack track) {
-        connectToFirstVoiceChannel(guild.getAudioManager());
+    private void play(VoiceChannel voiceChannel, Guild guild, GuildMusicManager musicManager, AudioTrack track) {
+        connectToVoiceChannel(voiceChannel, guild.getAudioManager());
         musicManager.scheduler.queue(track);
     }
 
@@ -122,16 +129,12 @@ public class MusicListener extends ListenerAdapter implements EventListener{
         channel.sendMessage("Skipped to next track.").queue();
     }
 
-    private static void connectToFirstVoiceChannel(AudioManager audioManager) {
+    private static void connectToVoiceChannel(VoiceChannel voiceChannel, AudioManager audioManager) {
         if (!audioManager.isConnected()) {
-            audioManager.openAudioConnection(getFirstVoiceChannel(audioManager));
+            audioManager.openAudioConnection(voiceChannel);
             audioManager.setSpeakingMode(SpeakingMode.SOUNDSHARE);
             audioManager.setSelfDeafened(true);
         }
-    }
-
-    private static VoiceChannel getFirstVoiceChannel(AudioManager audioManager) {
-        return audioManager.getGuild().getVoiceChannels().get(0);
     }
 
     @SneakyThrows
@@ -145,33 +148,31 @@ public class MusicListener extends ListenerAdapter implements EventListener{
     @Override
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
         TextChannel channel = event.getChannelJoined().getGuild().getDefaultChannel();
-        if(event.getMember().getVoiceState().getChannel() == getFirstVoiceChannel(event.getGuild().getAudioManager())){
-            if (!event.getMember().getUser().isBot()) {
-                playHelloMusic(channel, "http://192.168.1.74:9000/discord/oprivet.mp3");
-            } else {
-                playHelloMusic(channel, "http://192.168.1.74:9000/discord/shizofreniya.mp3");
-                playHelloMusic(channel, "http://192.168.1.74:9000/discord/-blin-zachem-ya-syuda-prishel.mp3");
-                playHelloMusic(channel, "http://192.168.1.74:9000/discord/povezlo-povezlo.mp3");
-            }
+        if (!event.getMember().getUser().isBot()) {
+            playHelloMusic(event.getChannelJoined(), channel, "http://192.168.1.74:9000/discord/oprivet.mp3");
+        } else {
+            playHelloMusic(event.getChannelJoined(), channel, "http://192.168.1.74:9000/discord/shizofreniya.mp3");
+            playHelloMusic(event.getChannelJoined(), channel, "http://192.168.1.74:9000/discord/-blin-zachem-ya-syuda-prishel.mp3");
+            playHelloMusic(event.getChannelJoined(), channel, "http://192.168.1.74:9000/discord/povezlo-povezlo.mp3");
         }
     }
 
     @Override
     public void onGuildVoiceLeave(GuildVoiceLeaveEvent event) {
         VoiceChannel channelLeft = event.getChannelLeft();
-        if(channelLeft == getFirstVoiceChannel(event.getGuild().getAudioManager()) && channelLeft.getMembers().size() == 1){
+        if (channelLeft == event.getGuild().getAudioManager().getConnectedChannel() && channelLeft.getMembers().size() == 1) {
             getGuildAudioPlayer(event.getGuild()).scheduler.clearQueue();
             event.getGuild().getAudioManager().closeAudioConnection();
         }
     }
 
-    private void playHelloMusic(TextChannel channel, String trackUrl) {
+    private void playHelloMusic(VoiceChannel voiceChannel ,TextChannel channel, String trackUrl) {
         GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
 
         playerManager.loadItemOrdered(getGuildAudioPlayer(channel.getGuild()), trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                connectToFirstVoiceChannel(channel.getGuild().getAudioManager());
+                connectToVoiceChannel(voiceChannel ,channel.getGuild().getAudioManager());
                 musicManager.scheduler.hello(track);
             }
 
