@@ -1,5 +1,8 @@
 package dimon.bot.config;
 
+import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
+import com.github.twitch4j.TwitchClient;
+import com.github.twitch4j.TwitchClientBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.hooks.EventListener;
@@ -19,6 +22,16 @@ public class BotConfig {
     @Value("${discord.bot.token}")
     private String token;
 
+    @Value("${access.token}")
+    private String accessToken;
+
+    @Value("${client.id}")
+    private String clientId;
+
+    @Value("${client.secret}")
+    private String clientSecret;
+    private OAuth2Credential credential;
+
     @Bean
     public JDA jda(List<EventListener> eventListeners){
         LOG.info("Starting JDA");
@@ -33,6 +46,22 @@ public class BotConfig {
         }
 
         return jda;
+    }
+
+    @Bean
+    public TwitchClient client(){
+        credential = new OAuth2Credential("twitch", accessToken);
+        TwitchClient twitchClient = TwitchClientBuilder.builder()
+                .withClientId(clientId)
+                .withClientSecret(clientSecret)
+                .withEnableHelix(true)
+                .withChatAccount(credential)
+                .withEnableChat(true)
+                .build();
+
+        twitchClient.getClientHelper().enableStreamEventListener("raccoona_gg");
+        twitchClient.getChat().joinChannel("raccoona_gg");
+        return twitchClient;
     }
 
 
