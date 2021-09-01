@@ -33,15 +33,6 @@ public class ChatListener  extends ListenerAdapter implements EventListener {
             case "~join":
                 musicListener.connectToVoiceChannel(event.getMember().getVoiceState().getChannel(), event.getChannel().getGuild().getAudioManager());
                 break;
-            case "~notify":
-                if(event.getAuthor().getId().equals("407644589277708298") || event.getAuthor().getId().equals("286154555417296906") || event.getAuthor().getId().equals("587897463252189195")){
-                    event.getChannel().sendMessage("Raccoona_gg Запустила трансляцию! Залетай скорее! https://www.twitch.tv/raccoona_gg").queue();
-                } else{
-                    event.getChannel().sendMessage("Отказано в доступе. ХЫ").queue();
-                }
-                break;
-            case "~id":
-                System.out.println(event.getChannel().getId());
         }
         if ("~play".equals(command[0]) && command.length == 2) {
             musicListener.loadAndPlay(event.getMember().getVoiceState().getChannel(), event.getChannel(), command[1]);
