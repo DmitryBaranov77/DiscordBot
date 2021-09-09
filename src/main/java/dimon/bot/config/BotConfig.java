@@ -57,6 +57,7 @@ public class BotConfig {
                 .withEnableHelix(true)
                 .withChatAccount(credential)
                 .withEnableChat(true)
+                .withEnableKraken(true)
                 .build();
 
         twitchClient.getClientHelper().enableStreamEventListener("raccoona_gg");

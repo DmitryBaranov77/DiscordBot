@@ -6,10 +6,15 @@ import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
+import com.github.twitch4j.helix.domain.Follow;
+import com.github.twitch4j.helix.domain.FollowList;
 import dimon.bot.listeners.services.SendInfoMessage;
 import net.dv8tion.jda.api.JDA;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -35,7 +40,7 @@ public class TwitchListener {
     }
 
     private void onLiveEvent(ChannelGoLiveEvent event){
-        jda.getTextChannelById("872417764193742911").sendMessage("@\uD83D\uDD34Сабчики\uD83D\uDD34 Raccoona_gg Запустила трансляцию! Залетай скорее! https://www.twitch.tv/raccoona_gg").queue();
+        jda.getTextChannelById("872417764193742911").sendMessage("@everyone Raccoona_gg Запустила трансляцию! Залетай скорее! https://www.twitch.tv/raccoona_gg").queue();
         twitchClient.getChat().sendMessage(event.getChannel().getName(), "Удачного стрима красотка!");
         se = Executors.newScheduledThreadPool(1);
         se.scheduleAtFixedRate(new SendInfoMessage(twitchClient, event.getChannel().getName()), 0, 5, TimeUnit.MINUTES);
@@ -69,6 +74,14 @@ public class TwitchListener {
                 event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName()+" Размер твоего меча Экскалибура "+
                         ( (int) (1 + Math.random() * 30))+" см.");
                 break;
+            case "!follow":
+                FollowList followList = twitchClient.getHelix().getFollowers(null, event.getUser().getId(), event.getChannel().getId(), null, 1).execute();
+                followList.getFollows().forEach(follow -> {
+                    Duration duration = Duration.between(follow.getFollowedAtInstant(), Instant.now());
+                    event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() +" ты подписан на чанал "+duration.toDays()+" днёв");
+                });
+
+
         }
     }
 
