@@ -58,17 +58,14 @@ public class TwitchListener {
                 event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() + " хуй на");
                 break;
             case "аа":
-                event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() + " хуй на");
+                event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() + " хуй наа");
                 break;
             case "ааа":
-                event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() + " хуй на");
+                event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() + " хуй нааа");
                 break;
             case "!start":
                 se = Executors.newScheduledThreadPool(1);
                 se.scheduleAtFixedRate(new SendInfoMessage(twitchClient, event.getChannel().getName()), 0, 5, TimeUnit.MINUTES);
-                break;
-            case "!stop":
-                se.shutdownNow();
                 break;
             case "!см":
                 event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName()+" Размер твоего меча Экскалибура "+
@@ -80,8 +77,11 @@ public class TwitchListener {
                     Duration duration = Duration.between(follow.getFollowedAtInstant(), Instant.now());
                     event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() +" ты подписан на чанал "+duration.toDays()+" днёв");
                 });
-
-
+                break;
+            case "!commands":
+                event.getTwitchChat().sendMessage(event.getChannel().getName(), "!см - размер твоей джуджульки 8==============D~\n" +
+                        "!follow - сколько днёв ты зафолловлен на этот чанал\n");
+                break;
         }
     }
 
