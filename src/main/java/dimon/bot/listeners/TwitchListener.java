@@ -4,14 +4,13 @@ import com.github.philippheuer.events4j.core.EventManager;
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
+import com.github.twitch4j.chat.events.channel.DonationEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
-import com.github.twitch4j.helix.domain.Follow;
 import com.github.twitch4j.helix.domain.FollowList;
 import dimon.bot.listeners.services.SendInfoMessage;
 import net.dv8tion.jda.api.JDA;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -49,6 +48,10 @@ public class TwitchListener {
     private void onOfflineEvent(ChannelGoOfflineEvent event){
         twitchClient.getChat().sendMessage(event.getChannel().getName(), "Пока пока");
         se.shutdownNow();
+    }
+
+    private void onDonationEvent(DonationEvent event){
+        twitchClient.getChat().sendPrivateMessage("dedrybak77", event.getUser() +" задонатил "+ event.getAmount()+" "+event.getCurrency());
     }
 
     private void onChannelMessage(ChannelMessageEvent event){
