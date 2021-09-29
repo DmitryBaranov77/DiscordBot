@@ -36,6 +36,7 @@ public class TwitchListener {
         eventHandler.onEvent(ChannelMessageEvent.class, event -> onChannelMessage(event));
         eventHandler.onEvent(ChannelGoLiveEvent.class, event -> onLiveEvent(event));
         eventHandler.onEvent(ChannelGoOfflineEvent.class, event -> onOfflineEvent(event));
+        eventHandler.onEvent(DonationEvent.class, event -> onDonationEvent(event));
     }
 
     private void onLiveEvent(ChannelGoLiveEvent event){
