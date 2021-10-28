@@ -94,16 +94,20 @@ public class MusicListener{
         channel.sendMessage("Skipped to next track.").queue();
     }
 
-    protected static void connectToVoiceChannel(VoiceChannel voiceChannel, AudioManager audioManager) {
+    protected void connectToVoiceChannel(VoiceChannel voiceChannel, AudioManager audioManager) {
         if (!audioManager.isConnected()) {
             audioManager.openAudioConnection(voiceChannel);
             audioManager.setSpeakingMode(SpeakingMode.SOUNDSHARE);
             audioManager.setSelfDeafened(true);
+            playHelloMusic(voiceChannel, voiceChannel.getGuild().getDefaultChannel(), "http://192.168.1.74:9000/discord/shizofreniya.mp3");
+            playHelloMusic(voiceChannel, voiceChannel.getGuild().getDefaultChannel(), "http://192.168.1.74:9000/discord/-blin-zachem-ya-syuda-prishel.mp3");
+            playHelloMusic(voiceChannel, voiceChannel.getGuild().getDefaultChannel(), "http://192.168.1.74:9000/discord/povezlo-povezlo.mp3");
+            playHelloMusic(voiceChannel, voiceChannel.getGuild().getDefaultChannel(), "http://192.168.1.74:9000/discord/oprivet.mp3");
         }
     }
 
     @SneakyThrows
-    protected static void disconnectFromVoiceChannel(AudioManager audioManager) {
+    protected void disconnectFromVoiceChannel(AudioManager audioManager) {
         if (audioManager.isConnected()) {
             Thread.sleep(6000);
             audioManager.closeAudioConnection();
@@ -116,7 +120,6 @@ public class MusicListener{
         playerManager.loadItemOrdered(getGuildAudioPlayer(channel.getGuild()), trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                connectToVoiceChannel(voiceChannel ,channel.getGuild().getAudioManager());
                 musicManager.scheduler.hello(track);
             }
 
