@@ -44,7 +44,7 @@ public class TwitchListener {
     }
 
     private void onLiveEvent(ChannelGoLiveEvent event){
-        //jda.getTextChannelById("872417764193742911").sendMessage("@everyone Raccooona Запустила трансляцию! Залетай скорее! https://www.twitch.tv/raccooona").queue();
+        jda.getTextChannelById("872417764193742911").sendMessage("@everyone Raccooona Запустила трансляцию! Залетай скорее! https://www.twitch.tv/raccooona").queue();
         bot.execute(new SendMessage(-663608467, "https://www.twitch.tv/raccooona"));
         twitchClient.getChat().sendMessage(event.getChannel().getName(), "Удачного стрима красотка!");
         se = Executors.newScheduledThreadPool(1);

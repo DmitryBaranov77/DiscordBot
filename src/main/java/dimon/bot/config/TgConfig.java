@@ -13,7 +13,6 @@ public class TgConfig {
     public static TelegramBot getTelegramBot(){
         if (telegramBot == null){
             telegramBot = new TelegramBot(tgBotToken);
-            System.out.println(tgBotToken);
         }
         return telegramBot;
     }

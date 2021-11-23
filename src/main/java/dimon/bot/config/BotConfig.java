@@ -60,8 +60,8 @@ public class BotConfig {
                 .withEnableKraken(true)
                 .build();
 
-        twitchClient.getClientHelper().enableStreamEventListener("sergio270");
-        twitchClient.getChat().joinChannel("sergio270");
+        twitchClient.getClientHelper().enableStreamEventListener("raccooona");
+        twitchClient.getChat().joinChannel("raccooona");
         return twitchClient;
     }
 }
