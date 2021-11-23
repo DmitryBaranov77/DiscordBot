@@ -10,7 +10,6 @@ import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.helix.domain.FollowList;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
-import dimon.bot.config.TgConfig;
 import dimon.bot.listeners.services.SendInfoMessage;
 import net.dv8tion.jda.api.JDA;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ public class TwitchListener {
     private TwitchClient twitchClient;
     private ScheduledExecutorService se;
     private JDA jda;
-    private TelegramBot bot = TgConfig.getTelegramBot();
 
     public TwitchListener(TwitchClient twitchClient, JDA jda) {
         this.twitchClient = twitchClient;
@@ -45,7 +43,6 @@ public class TwitchListener {
 
     private void onLiveEvent(ChannelGoLiveEvent event){
         jda.getTextChannelById("872417764193742911").sendMessage("@everyone Raccooona Запустила трансляцию! Залетай скорее! https://www.twitch.tv/raccooona").queue();
-        bot.execute(new SendMessage(-663608467, "https://www.twitch.tv/raccooona"));
         twitchClient.getChat().sendMessage(event.getChannel().getName(), "Удачного стрима красотка!");
         se = Executors.newScheduledThreadPool(1);
         se.scheduleAtFixedRate(new SendInfoMessage(twitchClient, event.getChannel().getName()), 0, 5, TimeUnit.MINUTES);
