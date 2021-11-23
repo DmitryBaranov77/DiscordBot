@@ -12,12 +12,12 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ChatListener extends ListenerAdapter implements EventListener {
+public class DiscordChatListener extends ListenerAdapter implements EventListener {
     @Getter
-    private MusicListener musicListener;
+    private DiscordMusicListener discordMusicListener;
 
-    public ChatListener(MusicListener musicListener) {
-        this.musicListener = musicListener;
+    public DiscordChatListener(DiscordMusicListener discordMusicListener) {
+        this.discordMusicListener = discordMusicListener;
     }
 
     @SneakyThrows
@@ -26,18 +26,18 @@ public class ChatListener extends ListenerAdapter implements EventListener {
         String[] command = event.getMessage().getContentRaw().split(" ", 2);
         switch (command[0]) {
             case "~skip":
-                musicListener.skipTrack(event.getChannel());
+                discordMusicListener.skipTrack(event.getChannel());
                 break;
             case "~leave":
-                musicListener.playByeMusic(event.getChannel(), "http://192.168.1.74:9000/discord/kto-kuda-a-ya-po-delam.mp3");
-                musicListener.disconnectFromVoiceChannel(event.getGuild().getAudioManager());
+                discordMusicListener.playByeMusic(event.getChannel(), "http://192.168.1.74:9000/discord/kto-kuda-a-ya-po-delam.mp3");
+                discordMusicListener.disconnectFromVoiceChannel(event.getGuild().getAudioManager());
                 break;
             case "~join":
-                musicListener.connectToVoiceChannel(event.getMember().getVoiceState().getChannel(), event.getChannel().getGuild().getAudioManager());
+                discordMusicListener.connectToVoiceChannel(event.getMember().getVoiceState().getChannel(), event.getChannel().getGuild().getAudioManager());
                 break;
         }
         if ("~play".equals(command[0]) && command.length == 2) {
-            musicListener.loadAndPlay(event.getMember().getVoiceState().getChannel(), event.getChannel(), command[1]);
+            discordMusicListener.loadAndPlay(event.getMember().getVoiceState().getChannel(), event.getChannel(), command[1]);
         }
 
         super.onGuildMessageReceived(event);
@@ -47,10 +47,10 @@ public class ChatListener extends ListenerAdapter implements EventListener {
     public void onGuildVoiceJoin(GuildVoiceJoinEvent event) {
         TextChannel channel = event.getChannelJoined().getGuild().getDefaultChannel();
         if(!event.getMember().getUser().isBot()){
-            musicListener.connectToVoiceChannel(event.getChannelJoined(), event.getGuild().getAudioManager());
+            discordMusicListener.connectToVoiceChannel(event.getChannelJoined(), event.getGuild().getAudioManager());
         }
         if (!event.getMember().getUser().isBot() && (event.getChannelJoined() == event.getGuild().getAudioManager().getConnectedChannel())) {
-            musicListener.playHelloMusic(event.getChannelJoined(), channel, "http://192.168.1.74:9000/discord/oprivet.mp3");
+            discordMusicListener.playHelloMusic(event.getChannelJoined(), channel, "http://192.168.1.74:9000/discord/oprivet.mp3");
         }
     }
 
@@ -58,7 +58,7 @@ public class ChatListener extends ListenerAdapter implements EventListener {
     public void onGuildVoiceLeave(GuildVoiceLeaveEvent event) {
         VoiceChannel channelLeft = event.getChannelLeft();
         if (channelLeft == event.getGuild().getAudioManager().getConnectedChannel() && channelLeft.getMembers().size() == 1) {
-            musicListener.getGuildAudioPlayer(event.getGuild()).scheduler.clearQueue();
+            discordMusicListener.getGuildAudioPlayer(event.getGuild()).scheduler.clearQueue();
             event.getGuild().getAudioManager().closeAudioConnection();
         }
     }

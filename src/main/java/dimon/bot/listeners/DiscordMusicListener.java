@@ -19,12 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class MusicListener{
+public class DiscordMusicListener {
 
     private final AudioPlayerManager playerManager;
     private final Map<Long, GuildMusicManager> musicManagers;
 
-    public MusicListener() {
+    public DiscordMusicListener() {
         this.musicManagers = new HashMap<>();
         this.playerManager = new DefaultAudioPlayerManager();
         AudioSourceManagers.registerRemoteSources(playerManager);
