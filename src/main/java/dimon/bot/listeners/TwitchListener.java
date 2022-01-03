@@ -69,6 +69,12 @@ public class TwitchListener {
             case "ааа":
                 event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() + " хуй нааа");
                 break;
+            case "да":
+                event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() + " пизда");
+                break;
+            case "Да":
+                event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() + " Пизда");
+                break;
             case "!start":
                 se = Executors.newScheduledThreadPool(1);
                 se.scheduleAtFixedRate(new SendInfoMessage(twitchClient, event.getChannel().getName()), 0, 5, TimeUnit.MINUTES);
