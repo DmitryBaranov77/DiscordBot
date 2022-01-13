@@ -30,7 +30,7 @@ public class SendInfoMessage implements Runnable{
                 count++;
                 break;
             case 2:
-                msg = "Ты можешь сделать стримера чуточку счастливее, поддержав его канал \uD83E\uDC16 https://www.donationalerts.com/r/juli0712 ♡";
+                msg = "Ты можешь сделать стримера чуточку счастливее, поддержав его канал \uD83E\uDC16 https://www.donationalerts.com/r/raccooona ♡";
                 count = 0;
                 break;
         }

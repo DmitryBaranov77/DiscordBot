@@ -8,8 +8,6 @@ import com.github.twitch4j.chat.events.channel.DonationEvent;
 import com.github.twitch4j.events.ChannelGoLiveEvent;
 import com.github.twitch4j.events.ChannelGoOfflineEvent;
 import com.github.twitch4j.helix.domain.FollowList;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.request.SendMessage;
 import dimon.bot.listeners.services.SendInfoMessage;
 import net.dv8tion.jda.api.JDA;
 import org.springframework.stereotype.Service;
