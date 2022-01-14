@@ -88,9 +88,14 @@ public class TwitchListener {
                     event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() +" ты подписан на чанал "+duration.toDays()+" днёв");
                 });
                 break;
-            case "!commands":
-                event.getTwitchChat().sendMessage(event.getChannel().getName(), "!см - размер твоей джуджульки 8==============D~\n" +
-                        "!follow - сколько днёв ты зафолловлен на этот чанал\n");
+            case "!inst":
+                event.getTwitchChat().sendMessage(event.getChannel().getName(), "Заходи в мой инстаграм, возможно я туда когда-нибудь что-нибудь туда залью (но это не точно) \uD83E\uDC16 https://www.instagram.com/raccoona__ ♡");
+                break;
+            case "!tg":
+                event.getTwitchChat().sendMessage(event.getChannel().getName(), "Заходи в мой тг https://t.me/raccooonaa ♡");
+                break;
+            case "!dis":
+                event.getTwitchChat().sendMessage(event.getChannel().getName(), "Присоединяйся в наш дискорд канал, а то че как лох \uD83E\uDC16 https://discord.gg/TSUMEvWZhn ♡");
                 break;
         }
     }

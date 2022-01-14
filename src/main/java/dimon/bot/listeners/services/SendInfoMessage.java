@@ -31,6 +31,10 @@ public class SendInfoMessage implements Runnable{
                 break;
             case 2:
                 msg = "Ты можешь сделать стримера чуточку счастливее, поддержав его канал \uD83E\uDC16 https://www.donationalerts.com/r/raccooona ♡";
+                count++;
+                break;
+            case 3:
+                msg = "Заходи в мой тг https://t.me/raccooonaa ♡";
                 count = 0;
                 break;
         }
