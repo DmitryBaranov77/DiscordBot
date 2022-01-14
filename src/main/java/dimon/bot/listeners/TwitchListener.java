@@ -92,9 +92,9 @@ public class TwitchListener {
                 event.getTwitchChat().sendMessage(event.getChannel().getName(), "Заходи в мой инстаграм, возможно я туда когда-нибудь что-нибудь туда залью (но это не точно) \uD83E\uDC16 https://www.instagram.com/raccoona__ ♡");
                 break;
             case "!tg":
-                event.getTwitchChat().sendMessage(event.getChannel().getName(), "Заходи в мой тг https://t.me/raccooonaa ♡");
+                event.getTwitchChat().sendMessage(event.getChannel().getName(), "Заходи в мой тг \uD83E\uDC16 https://t.me/raccooonaa ♡");
                 break;
-            case "!dis":
+            case "!ds":
                 event.getTwitchChat().sendMessage(event.getChannel().getName(), "Присоединяйся в наш дискорд канал, а то че как лох \uD83E\uDC16 https://discord.gg/TSUMEvWZhn ♡");
                 break;
         }

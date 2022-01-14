@@ -34,7 +34,7 @@ public class SendInfoMessage implements Runnable{
                 count++;
                 break;
             case 3:
-                msg = "Заходи в мой тг https://t.me/raccooonaa ♡";
+                msg = "Заходи в мой тг \uD83E\uDC16 https://t.me/raccooonaa ♡";
                 count = 0;
                 break;
         }
