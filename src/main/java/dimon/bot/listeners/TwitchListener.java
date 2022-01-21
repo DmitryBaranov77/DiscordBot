@@ -30,7 +30,7 @@ public class TwitchListener {
         register();
     }
 
-    private void register(){
+    private void register() {
         EventManager eventManager = twitchClient.getEventManager();
         SimpleEventHandler eventHandler = twitchClient.getEventManager().getEventHandler(SimpleEventHandler.class);
         eventHandler.onEvent(ChannelMessageEvent.class, event -> onChannelMessage(event));
@@ -39,23 +39,23 @@ public class TwitchListener {
         eventHandler.onEvent(DonationEvent.class, event -> onDonationEvent(event));
     }
 
-    private void onLiveEvent(ChannelGoLiveEvent event){
+    private void onLiveEvent(ChannelGoLiveEvent event) {
         jda.getTextChannelById("872417764193742911").sendMessage("@everyone Raccooona Запустила трансляцию! Залетай скорее! https://www.twitch.tv/raccooona").queue();
         twitchClient.getChat().sendMessage(event.getChannel().getName(), "Удачного стрима красотка!");
         se = Executors.newScheduledThreadPool(1);
         se.scheduleAtFixedRate(new SendInfoMessage(twitchClient, event.getChannel().getName()), 0, 5, TimeUnit.MINUTES);
     }
 
-    private void onOfflineEvent(ChannelGoOfflineEvent event){
+    private void onOfflineEvent(ChannelGoOfflineEvent event) {
         twitchClient.getChat().sendMessage(event.getChannel().getName(), "Пока пока");
         se.shutdownNow();
     }
 
-    private void onDonationEvent(DonationEvent event){
-        twitchClient.getChat().sendPrivateMessage("dedrybak77", event.getUser() +" задонатил "+ event.getAmount()+" "+event.getCurrency());
+    private void onDonationEvent(DonationEvent event) {
+        twitchClient.getChat().sendPrivateMessage("dedrybak77", event.getUser() + " задонатил " + event.getAmount() + " " + event.getCurrency());
     }
 
-    private void onChannelMessage(ChannelMessageEvent event){
+    private void onChannelMessage(ChannelMessageEvent event) {
         String msg = event.getMessage();
         switch (msg) {
             case "а":
@@ -73,19 +73,25 @@ public class TwitchListener {
             case "Да":
                 event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() + " Пизда");
                 break;
+            case "нет":
+                event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() + " говна пакет");
+                break;
+            case "Нет":
+                event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() + " Говна пакет");
+                break;
             case "!start":
                 se = Executors.newScheduledThreadPool(1);
                 se.scheduleAtFixedRate(new SendInfoMessage(twitchClient, event.getChannel().getName()), 0, 5, TimeUnit.MINUTES);
                 break;
             case "!см":
-                event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName()+" Размер твоего меча Экскалибура "+
-                        ( (int) (1 + Math.random() * 30))+" см.");
+                event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() + " Размер твоего меча Экскалибура " +
+                        ((int) (1 + Math.random() * 30)) + " см.");
                 break;
             case "!follow":
                 FollowList followList = twitchClient.getHelix().getFollowers(null, event.getUser().getId(), event.getChannel().getId(), null, 1).execute();
                 followList.getFollows().forEach(follow -> {
                     Duration duration = Duration.between(follow.getFollowedAtInstant(), Instant.now());
-                    event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() +" ты подписан на чанал "+duration.toDays()+" днёв");
+                    event.getTwitchChat().sendMessage(event.getChannel().getName(), event.getUser().getName() + " ты подписан на чанал " + duration.toDays() + " днёв");
                 });
                 break;
             case "!inst":
